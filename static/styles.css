@@ -1,0 +1,14 @@
+.container-fluid {
+    margin: auto;
+    padding: 2% 5%;
+}
+.navbar-brand {
+    font-size: 1.5rem;
+    font-family: "ubuntu";
+    font-weight: bold;
+    padding-left : 15px
+}
+button {
+    margin-top: 20px;
+} 
+
