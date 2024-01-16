@@ -131,7 +131,7 @@ STATIC_ROOT = os.path.join("assets")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CELERY_BROKER_URL = 'amqps://nmhirzca:tiCaranWXUCbN_KmfgcBbi8chqThQOxI@puffin.rmq2.cloudamqp.com/nmhirzca'
+CELERY_BROKER_URL = 'amqps://chyicurd:ya_sKG7nByXLgsl7JTIR4iT_tJdBYPyp@lionfish.rmq.cloudamqp.com/chyicurd'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'

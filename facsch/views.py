@@ -50,7 +50,6 @@ def facsch(request):
 
         #creating list in all faculty id's
         fac_list = list(BTFacultyInfo.objects.values('FacultyId').order_by('WorkingHours', 'FacultyId').values_list('FacultyId', flat=True).distinct())
-        print(fac_list)
         # Define the pattern string for the row and column names
         pattern1 = 'd{} s{}'
         pattern2 = 'room {}'
@@ -78,13 +77,12 @@ def facsch(request):
                 recipient1 = to_email1.Email
                 recipient2 = to_email2.Email
                 subject = 'Invigilation duty'
-                message = 'Sir, your invigilation is on' + col + '. please go to assigned room no' + index
+                message = 'Sir, your invigilation is on ' + col + '. please go to assigned room no ' + index
                 send_time = timezone.now()  # schedule the email to be sent one hour from now
                 send_mail_func.apply_async(args=[recipient1, subject, message], eta=send_time)
                 send_mail_func.apply_async(args=[recipient2, subject, message], eta=send_time)
                 ###
                 fac_list = list(BTFacultyInfo.objects.values('FacultyId').order_by('WorkingHours', 'FacultyId').values_list('FacultyId', flat=True).distinct())
-
         response_content = []
         for col in df.columns:
             response_content.append(f"\n{col}")
@@ -111,7 +109,7 @@ def facsch(request):
     else:
         return render(request, 'facsch.html')
 
-@login_required
+
 @never_cache
 def faclogin(request):
     if request.method == 'POST':

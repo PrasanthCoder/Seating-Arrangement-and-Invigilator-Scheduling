@@ -8,55 +8,68 @@ from django.db.models import Count
 
 # Create your views here.
 def input(request):
-        if request.method == 'post':
+        if request.method == 'POST':
+            print("entered post")
             xcel_file1 = request.FILES['students']
             xcel_file2 = request.FILES['subjects']
             stu_file = pd.read_excel(xcel_file1)
-            sub_file = pd.real_excel(xcel_file2)
+            sub_file = pd.read_excel(xcel_file2)
+            print("Entering loop")
             for index, row in stu_file.iterrows():
-                student_instance = BTStudentInfo(
-                    RegNo = row['RegNo'],
-                    RollNo = row['RollNo'],
-                    Name = row['Name'],
-                    Regulation = row['Regulation'],
-                    Dept = row['dept'],
-                    AdmissionYear = row['AdmissionYear'],
-                    Gender = row['Gender'],
-                    Category = row['Category'],
-                    GuardianName = row['GuardianName'],
-                    Phone = row['Phone'],
-                    Email = row['Email'],
-                    Address1 = row['Address1'],
-                    Address2 = row['Address2'],
-                    Cycle = row['Cycle']
-                )
-                student_instance.save()
+                print("Entered loop")
+                if BTStudentInfo.objects.filter(RegNo=row['RegNo']).exists():
+                    print("not working")
+                    pass
+                else:
+                    print("working")
+                    student_instance = BTStudentInfo(
+                        RegNo = row['RegNo'],
+                        RollNo = row['RollNo'],
+                        Name = row['Name'],
+                        Regulation = row['Regulation'],
+                        Dept = row['Dept'],
+                        AdmissionYear = row['AdmissionYear'],
+                        Gender = row['Gender'],
+                        Category = row['Category'],
+                        GuardinaName = row['GuardianName'],
+                        Phone = row['Phone'],
+                        Email = row['Email'],
+                        Address1 = row['Address1'],
+                        Address2 = row['Address2'],
+                        Cycle = row['Cycle']
+                    )
+                    student_instance.save()
 
-                roll_instance = BTRollLists(
-                     Cycle = row['Cycle'],
-                     Section = row['Section'],
-                     Student = student_instance
-                )
-                roll_instance.save()
+                    roll_instance = BTRollLists(
+                        Cycle = row['Cycle'],
+                        Section = row['Section'],
+                        Student = student_instance
+                    )
+                    roll_instance.save()
 
             for index, row in sub_file.iterrows():
-                subject_instance = BTSubjectInfo(
-                     Year = row['Year'],
-                     Sem = row['Sem'],
-                     Regulation = row['Regulation'],
-                     Mode = row['Mode'],
-                     Dept = row['Dept'],
-                     SubId = row['SubId'],
-                     SubCode = row['SubCode'],
-                     SubName = row['SubName'],
-                     Credits = row['Credits'],
-                     Type = row['Type'],
-                     Category = row['Category']
-                )
-                subject_instance.save()
+                if BTSubjectInfo.objects.filter(SubName = row['SubName']).exists():
+                    print("not working")
+                    pass
+                else:
+                    print("working")
+                    subject_instance = BTSubjectInfo(
+                        Year = row['Year'],
+                        Sem = row['Sem'],
+                        Regulation = row['Regulation'],
+                        Mode = row['Mode'],
+                        Dept = row['Dept'],
+                        SubId = row['SubId'],
+                        SubCode = row['SubCode'],
+                        SubName = row['SubName'],
+                        Credits = row['Credits'],
+                        Type = row['Type'],
+                        Category = row['Category']
+                    )
+                    subject_instance.save()
 
             return render(request, 'input.html')
-        else:        
+        else:
             return render(request, 'input.html')
      
 def home(request):
@@ -74,12 +87,15 @@ def home(request):
         for index,row in reg_file.iterrows(): # entering registation info into the databse.
              Studentinfo = BTRollLists.objects.get(Student = BTStudentInfo.objects.get(RollNo = row['RollNo']))
              Subinfo = BTSubjectInfo.objects.get(SubCode = row['SubCode'])
-             reg_instance = BTStudnetRegistrations(
-                  Student = Studentinfo,
-                  Mode = row['Mode'],
-                  Sub_Id = Subinfo
-             )
-             reg_instance.save()
+             if BTStudnetRegistrations.objects.filter(Student=Studentinfo).exists():
+                 pass
+             else:
+                reg_instance = BTStudnetRegistrations(
+                    Student = Studentinfo,
+                    Mode = row['Mode'],
+                    Sub_Id = Subinfo
+                )
+                reg_instance.save()
         sub_list = list(BTStudnetRegistrations.objects.values('Sub_Id_id').annotate(sub_count=Count('Sub_Id_id')).order_by('-sub_count', 'Sub_Id_id').values_list('Sub_Id_id', flat=True).distinct())
         sub_len = len(sub_list)
         sub_no = 0

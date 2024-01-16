@@ -7,5 +7,5 @@ from .models import *
 @shared_task(bind=True)
 def send_mail_func(self, to_email, subject, message):
     #operations
-    send_mail(subject, message, settings.EMAIL_HOST_USER, to_email, fail_silently=False)
+    send_mail(subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=False)
     return "Done"
