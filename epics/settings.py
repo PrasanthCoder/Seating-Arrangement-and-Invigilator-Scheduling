@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -131,7 +134,7 @@ STATIC_ROOT = os.path.join("assets")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CELERY_BROKER_URL = 'amqps://chyicurd:ya_sKG7nByXLgsl7JTIR4iT_tJdBYPyp@lionfish.rmq.cloudamqp.com/chyicurd'
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
